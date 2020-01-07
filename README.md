@@ -1,43 +1,55 @@
 # [Form validation problem](https://springload.github.io/form-validation-problem/)
+Form validation solution. Download, unzip, and open [index.html](index.html) in a browser to view.
 
-We've created this problem to evaluate how developers tackle a real-world problem. If you've been assigned this problem you should spend around **2 hours** working on it. The last thing we want you to do is toil away for days on end!
+## Technology
+I used plain JavaScript to perform the validation. For any significant project I would utilise React or choose a framework, but for a single page form with a ~2 hour time constraint I think that Javascript alone is sufficient. Advantages: Getting started was simple, there's very little boilerplate surrounding the code I added, and my dev iterations were fast.
+Limitations:
+This wouldn't scale well. If this was a project of any significant size I would want typing to avoid bugs
+Browsers with JavaScript disabled will be able to submit the form without validation, so server-side validation is also necessary.
 
-If you've stumbled across this and want to work at [Springload](https://www.springload.co.nz/) feel free to submit it too. We're always on the lookout for skilled developers.
+## Design notes
+#### I added the error messages to the HTML rather than generating them on validation.
+* Advantages:
+  * Code simplicity. The message is shown and hidden without any scripting beyond adding an error class to the parent element.
+* Disadvantages: 
+  * Only one error message per input. For more complicated input, it would be better to set the error text to specific messages returned from the validation function.
+  *  Error messages are separated from the validation that triggers them. If min password length is raised to 9, two files will be touched.
 
-## Problem definition
+#### Email addresses are validated with a fairly basic regex
+Regex is pulled from https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address
+* Advantages:
+  * Regular expressions are better supported than <input type=email> in older browsers
+  * The regex is simple enough that I can break it down and understand it
+* Disadvantages:
+  * Not all invalid email addresses will be caught (Server-side validation should fill this gap. The surest way to validate an email is to send something to it.)
 
-Included in this repository is an [index.html](index.html) file that contains a form. You must ensure all of the following rules are met before the form is posted to the (in this case imaginary) server:
+#### The tiger checking only checks for a non empty string.
+I considered making this stricter, only accepting alphabetic characters, spaces, and hyphens, but in the end I decided open ended was better. With limited knowledge of how the form will be used, I decided to prioritize not unintentionally disallowing things like "Görlitz Zoo's Bengal #4".
 
-* `Email` must be a valid email address.
-* `Password` must be longer than 8 characters.
-* `Colour` must be selected.
-* At least two `Animal`s must be chosen.
-* If `Tiger` is one of the chosen `Animal`s then `Type of tiger` is required to be a non-empty string.
+<br>If getting normalised, valid input is really important, a dropdown should be used instead.
 
-## Other requirements
+## :cherries:
+### Accessibility
+* Most input elements have the aria-required and aria-invalid property set to make content more accessible to screen readers.
+* My changes did not change keyboard navigation of the form
+* I used semantic tagging for error messages. Using \<em\> conveys emphasis on error messages without relying on red or italicised text.
+* Added lang='en' to the HTML element, something than screen readers look for
 
-If the form is submitted and an error occurs, the error element's parent should have a CSS `error` class added to it.
+### Testing
+* I performed manual testing across browsers, with JavaScript disabled, using mobile phone screen dimensions, and using keyboard navigation only.
+* I also ran the regex through a test set of valid and invalid email addresses before including it in code.
+* I did not write any automated tests for this project in its barebones state. If I were to add tests I would use a testing framework like Jest or Mocha.
 
-```html
-<p class="error">
-    <label for="field"></label>
-    <input id="field" type="text" value="foo">
-</p>
-```
+### Browser compatibility
+* I checked coverage of CSS rules, functions, and language features across all major browsers as I worked, aiming for coverage right down to IE7.
 
-Please write a little bit about the technology you chose and why, including any limitations or possibilities of this approach.
+### Documentation
+* This README begins with instructions for running the project, and design decisions are documented under [Design Notes](#Design-Notes).
+* I believe in self documenting code, and generally only comment to explain why something is done. A comment explaining what code is doing can usually be replaced with better variable and function naming and/or more intermediate steps.
 
-## The cherry on the cake
+### Progressive Enhancement
+* The form loads and can be submitted (sans validation) without JavaScript enabled, something that would have been lost if I'd adopted React with client-side rendering.
+* The validation runs on old browsers with slow connections. It has a solid base, and can now be enhanced with conditional rendering of input elements, animal emojis in the select elements, a spinning submit button...
 
-Beyond the problem statement, show us the consideration you have given to some or all of the following:
-
-- Documentation
-- Accessibility
-- Progressive enhancement
-- Browser support
-- Testing
-- Tooling
-
-## Submission
-
-Please email us a link to your fork of this repository, or a zip of your solution to `1337h4x0r@springload.co.nz`.
+<br><br>
+Thanks very much for taking the time to review my submission. I'd love to hear what I did well, and how I could do better! 
